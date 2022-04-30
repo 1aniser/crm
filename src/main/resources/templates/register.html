@@ -21,31 +21,28 @@
     <p class="error-message" th:if="${#fields.hasGlobalErrors()}"
        th:each="error : ${#fields.errors('global')}" th:text="${error}">Validation error
     </p>
-    <div class="form-floating" th:classappend="${#fields.hasErrors('username')}? 'has-error':''">
+    <div class="form-floating mb-3" th:classappend="${#fields.hasErrors('username')}? 'has-error':''">
       <input type="text" name="username" id="username" class="form-control" placeholder="Пользователь" th:field="*{username}">
       <label for="username" class="control-label">Пользователь</label>
       <p class="error-message"
          th:each="error: ${#fields.errors('username')}"
          th:text="${error}">Validation error</p>
     </div>
-    <p></p>
-    <div class="form-floating" th:classappend="${#fields.hasErrors('email')}? 'has-error':''">
+    <div class="form-floating mb-3" th:classappend="${#fields.hasErrors('email')}? 'has-error':''">
       <input type="email" name="email" id="email" class="form-control" placeholder="Email" th:field="*{email}"/>
       <label for="email" class="control-label">E-mail</label>
       <p class="error-message"
          th:each="error : ${#fields.errors('email')}"
          th:text="${error}">Validation error</p>
     </div>
-    <p></p>
-    <div class="form-floating" th:classappend="${#fields.hasErrors('password')}? 'has-error':''">
+    <div class="form-floating mb-3" th:classappend="${#fields.hasErrors('password')}? 'has-error':''">
       <input type="password" name="email" id="password" class="form-control" placeholder="Пароль" th:field="*{password}"/>
       <label for="password" class="control-label">Пароль</label>
       <p class="error-message"
          th:each="error : ${#fields.errors('password')}"
          th:text="${error}">Validation error</p>
     </div>
-    <p></p>
-    <div class="form-floating" th:classappend="${#fields.hasErrors('confirmPassword')}? 'has-error':''">
+    <div class="form-floating mb-3" th:classappend="${#fields.hasErrors('confirmPassword')}? 'has-error':''">
       <input type="password" name="email" id="confirmPassword" class="form-control" placeholder="Подтвердите пароль" th:field="*{confirmPassword}"/>
       <label for="confirmPassword" class="control-label">Подтвердите пароль</label>
       <p class="error-message"

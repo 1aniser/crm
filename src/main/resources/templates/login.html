@@ -24,18 +24,16 @@
         <div th:if="${param.logout}">
             Вы вышли из системы.
         </div>
-        <div class="form-floating">
+        <div class="form-floating mb-3">
             <input type="text" name="username" class="form-control" id="username" placeholder="Пользователь">
             <label for="username">Пользователь</label>
         </div>
-        <p></p>
-        <div class="form-floating">
+        <div class="form-floating mb-3">
             <input type="password" name="password" class="form-control" id="password" placeholder="Пароль">
             <label for="password">Пароль</label>
         </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit" value="Sign In">Войти</button>
+        <button class="w-100 btn btn-lg btn-primary mb-3" type="submit" value="Sign In">Войти</button>
     </form>
-    <p></p>
     <a href="/register" class="w-100 btn btn-lg btn-secondary" role="button">Регистрация</a>
 </main>
 </body>
