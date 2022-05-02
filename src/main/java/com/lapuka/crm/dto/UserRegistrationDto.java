@@ -16,6 +16,12 @@ public class UserRegistrationDto {
     private String password;
 
     @NotEmpty
+    private String fio;
+
+    @NotEmpty
+    private String phone;
+
+    @NotEmpty
     private String confirmPassword;
 
     @Email
@@ -63,5 +69,21 @@ public class UserRegistrationDto {
 
     public void setTerms(Boolean terms) {
         this.terms = terms;
+    }
+
+    public String getFio() {
+        return fio;
+    }
+
+    public void setFio(String fio) {
+        this.fio = fio;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

@@ -5,9 +5,12 @@ import com.lapuka.crm.model.User;
 import com.lapuka.crm.repository.OrderRepository;
 import com.lapuka.crm.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @Controller
 public class MainController {
@@ -36,13 +39,6 @@ public class MainController {
         return "login";
     }
 
-    @GetMapping("/customers")
-    public String customers(Model model) {
-        Iterable<User> users = userRepository.findAll();
-        model.addAttribute("users", users);
-        return "customers";
-    }
-
     @GetMapping("/statistics")
     public String statistics(Model model) {
         return "statistics";
@@ -51,5 +47,12 @@ public class MainController {
     @GetMapping("/addOrder")
     public String addOrder(Model model) {
         return "addOrder";
+    }
+
+    @PostMapping("/addOrder")
+    public String addNewOrder(@RequestParam String subject, @RequestParam String description, @CurrentSecurityContext(expression="authentication?.name") String username, Model model){
+        Orders order = new Orders(subject, description, username, new Date(), "Новый");
+        orderRepository.save(order);
+        return "redirect:/";
     }
 }

@@ -1,6 +1,7 @@
 package com.lapuka.crm.model;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class Orders {
@@ -9,19 +10,27 @@ public class Orders {
     private Long id;
     private String subject;
     private String description;
-    private Long user_id;
-    private String time;
+    private String user;
+    private Date date;
     private String status;
 
     public Orders() {
     }
 
-    public Orders(Long id, String subject, String description, Long user_id, String time, String status) {
+    public Orders(Long id, String subject, String description, String user, Date date, String status) {
         this.id = id;
         this.subject = subject;
         this.description = description;
-        this.user_id = user_id;
-        this.time = time;
+        this.user = user;
+        this.date = date;
+        this.status = status;
+    }
+
+    public Orders(String subject, String description, String user, Date date, String status) {
+        this.subject = subject;
+        this.description = description;
+        this.user = user;
+        this.date = date;
         this.status = status;
     }
 
@@ -49,20 +58,20 @@ public class Orders {
         this.description = description;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public String getUser() {
+        return user;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public String getTime() {
-        return time;
+    public Date getDate() {
+        return date;
     }
 
-    public void setTime(String time) {
-        this.time = time;
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public String getStatus() {
@@ -71,17 +80,5 @@ public class Orders {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "Orders{" +
-                "id=" + id +
-                ", subject='" + subject + '\'' +
-                ", description='" + description + '\'' +
-                ", user_id=" + user_id +
-                ", time='" + time + '\'' +
-                ", status='" + status + '\'' +
-                '}';
     }
 }
