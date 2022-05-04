@@ -105,8 +105,7 @@
                 <strong>[[${#httpServletRequest.remoteUser}]]</strong>
             </a>
             <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-                <li><a class="dropdown-item" href="#">Настройки</a></li>
-                <li><a class="dropdown-item" href="#">Профиль</a></li>
+                <li><a class="dropdown-item" th:href="@{'/profile/' + ${#httpServletRequest.remoteUser}}">Профиль</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li><form th:action="@{/logout}" method="post">
                     <input type="submit" class="dropdown-item" value="Выйти"/>
@@ -115,30 +114,65 @@
         </div>
     </div>
     <div style="width: 100%;">
-        <div class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap shadow" style="height: 10vh;">
-            <input class="form-control form-control-dark w-100" type="text" placeholder="Поиск" aria-label="Search">
+        <form th:action="@{/search}" method="get" class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap shadow" style="height: 10vh;">
+            <input type="text" class="form-control form-control-dark w-100" name="keyword" th:value="${keyword}" aria-label="Search" placeholder="Поиск">
+            <div class="navbar-nav">
+                <div class="nav-item text-nowrap">
+                    <button type="submit" class="btn btn-primary m-3">Поиск</button>
+                </div>
+            </div>
+            <div class="navbar-nav">
+                <div class="nav-item text-nowrap">
+                    <a href="/" class="btn btn-primary m-3">Очистить</a>
+                </div>
+            </div>
             <div sec:authorize="hasAuthority('ROLE_USER')" class="navbar-nav">
                 <div class="nav-item text-nowrap">
                     <a class="btn btn-primary m-3" href="/addOrder">Добавить заказ</a>
                 </div>
             </div>
-        </div>
-        <div class="container" style="overflow:scroll; height: 90vh;">
-            <div class="container btn-group my-3" role="group" aria-label="a">
-                <button type="button" class="border border-white btn btn-primary">ID заказа</button>
-                <button type="button" class="border border-white btn btn-primary">Тема</button>
-                <button type="button" class="border border-white btn btn-primary">Заказчик</button>
-                <button type="button" class="border border-white btn btn-primary">Дата заказа</button>
-                <button type="button" class="border border-white btn btn-primary">Статус заказа</button>
-                <a class="border border-white btn btn-primary">Подробнее</a>
+        </form>
+        <div class="container" style="height: 90vh;">
+            <div class="container btn-group my-3" role="group">
+                <th>
+                    <a type="button" class="border border-white btn btn-primary col-1" th:href="@{'/home/page/' + ${currentPage} + '?sortField=id&sortDir=' + ${reverseSortDir}}">ID</a>
+                </th>
+                <th>
+                    <a type="button" class="border border-white btn btn-primary col-4" th:href="@{'/home/page/' + ${currentPage} + '?sortField=subject&sortDir=' + ${reverseSortDir}}">Тема</a>
+                </th>
+                <th>
+                    <a type="button" class="border border-white btn btn-primary col-3" th:href="@{'/home/page/' + ${currentPage} + '?sortField=user&sortDir=' + ${reverseSortDir}}">Заказчик</a>
+                </th>
+                <th>
+                    <a type="button" class="border border-white btn btn-primary col-4" th:href="@{'/home/page/' + ${currentPage} + '?sortField=date&sortDir=' + ${reverseSortDir}}">Дата заказа</a>
+                </th>
+                <th>
+                    <a type="button" class="border border-white btn btn-primary col-2" th:href="@{'/home/page/' + ${currentPage} + '?sortField=status&sortDir=' + ${reverseSortDir}}">Статус заказа</a>
+                </th>
+                <a class="border border-white btn btn-primary col-2">Подробнее</a>
             </div>
-            <div th:each="el : ${orders}" class="container btn-group my-1" role="group" aria-label="b">
-                <button type="button" class="border border-secondary btn btn-light" th:text="${el.id}"></button>
-                <button type="button" class="border border-secondary btn btn-light" th:text="${el.subject}"></button>
-                <button type="button" class="border border-secondary btn btn-light" th:text="${el.user}"></button>
-                <button type="button" class="border border-secondary btn btn-light" th:text="${el.date}"></button>
-                <button type="button" class="border border-secondary btn btn-light" th:text="${el.status}"></button>
-                <a th:href="'/order/' + ${el.id}" class="border border-secondary btn btn-light">Подробнее</a>
+            <div th:each="el : ${listorders}" class="container btn-group my-1" role="group">
+                <button type="button" class="border border-secondary btn btn-light col-1" th:text="${el.id}"></button>
+                <button type="button" class="border border-secondary btn btn-light col-4" th:text="${el.subject}"></button>
+                <button type="button" class="border border-secondary btn btn-light col-3" th:text="${el.user}"></button>
+                <button type="button" class="border border-secondary btn btn-light col-4" th:text="${el.date}"></button>
+                <button type="button" class="border border-secondary btn btn-light col-2" th:text="${el.status}"></button>
+                <a th:href="'/order/' + ${el.id}" class="border border-secondary btn btn-light col-2">Подробнее</a>
+            </div>
+            <div th:if="${totalPages > 1}" class="container btn-group d-flex justify-content-center my-2" style="width: 50%;" role="group" aria-label="c">
+                <a th:if="${currentPage != 1}" th:href="@{'/home/page/' + ${1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-4">Первая</a>
+                <span th:unless="${currentPage != 1}"class="border border-secondary btn btn-light col-4">Первая</span>
+                <a th:if="${currentPage > 1}" th:href="@{'/home/page/' + ${currentPage-1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-4">Предыдущая</a>
+                <span th:unless="${currentPage > 1}"class="border border-secondary btn btn-light col-4">Предыдущая</span>
+                <a th:if="${currentPage > 2}" th:href="@{'/home/page/' + ${currentPage-2}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-1">[[${currentPage - 2}]]</a>
+                <a th:if="${currentPage > 1}" th:href="@{'/home/page/' + ${currentPage-1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-1">[[${currentPage - 1}]]</a>
+                <span class="border border-primary btn btn-primary col-1">[[${currentPage}]]</span>
+                <a th:if="${currentPage < totalPages}" th:href="@{'/home/page/' + ${currentPage+1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-1">[[${currentPage + 1}]]</a>
+                <a th:if="${currentPage < totalPages-1}" th:href="@{'/home/page/' + ${currentPage+2}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-1">[[${currentPage + 2}]]</a>
+                <a th:if="${currentPage < totalPages}" th:href="@{'/home/page/' + ${currentPage+1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-4">Следующая</a>
+                <span th:unless="${currentPage < totalPages}"class="border border-secondary btn btn-light col-4">Следующая</span>
+                <a th:if="${currentPage < totalPages}" th:href="@{'/home/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-4">Последняя</a>
+                <span th:unless="${currentPage < totalPages}"class="border border-secondary btn btn-light col-4">Последняя</span>
             </div>
         </div>
     </div>

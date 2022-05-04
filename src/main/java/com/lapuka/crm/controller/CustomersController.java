@@ -1,15 +1,19 @@
 package com.lapuka.crm.controller;
 
+import com.lapuka.crm.model.Orders;
 import com.lapuka.crm.model.User;
 import com.lapuka.crm.repository.UserRepository;
-import com.lapuka.crm.service.UserService;
 import com.lapuka.crm.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -22,20 +26,24 @@ public class CustomersController {
 
     @GetMapping("/customers")
     public String customers(Model model) {
-        //Iterable<User> users = userRepository.findAll();
-        //model.addAttribute("users", users);
-        return findPaginated(1, "username", "asc", model);
+        return findPaginated(null,1, "id", "asc", model);
+    }
+
+    @RequestMapping("/customers/search")
+    public String search(Model model, String keyword){
+        return findPaginated(keyword,1, "id", "asc", model);
     }
 
     @GetMapping("customers/page/{pageNo}")
-    public String findPaginated(@PathVariable(value = "pageNo") int pageNo,
+    public String findPaginated(@RequestParam(value = "keyword", required = false) String keyword,
+                                @PathVariable(value = "pageNo") int pageNo,
                                 @RequestParam("sortField") String sortField,
                                 @RequestParam("sortDir") String sortDir,
                                 Model model) {
-        int pageSize = 2;
-
-        Page<User> page = userService.findPaginated(pageNo, pageSize, sortField, sortDir);
+        int pageSize = 10;
+        Page<User> page = userService.findPaginated(keyword, pageNo, pageSize, sortField, sortDir);
         List<User> listUsers = page.getContent();
+        model.addAttribute("keyword", keyword);
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
@@ -46,6 +54,7 @@ public class CustomersController {
         model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
 
         model.addAttribute("listusers", listUsers);
+
         return "customers";
     }
 }

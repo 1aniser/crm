@@ -30,11 +30,6 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @Override
-    public List<User> getAllEmployees() {
-        return userRepository.findAll();
-    }
-
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
@@ -60,11 +55,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Page<User> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
+    public Page<User> findPaginated(String keyword, int pageNo, int pageSize, String sortField, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
-
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+        if (keyword != null) {
+            return userRepository.findByUsernameContaining(keyword, pageable);
+        }
         return this.userRepository.findAll(pageable);
     }
 
