@@ -1,0 +1,48 @@
+<div th:fragment="sidebar">
+    <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="height: 100vh; width: 280px;">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+            <span class="fs-4">CRM система для образовательных организаций <span sec:authorize="hasAuthority('ROLE_ADMIN')" class="fs-6 badge bg-danger">admin</span></span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="/" class="nav-link text-white">
+                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#collection"></use></svg>
+                    Заявки
+                </a>
+            </li>
+            <li>
+                <a href="/orders" class="nav-link text-white">
+                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
+                    Заказы
+                </a>
+            </li>
+            <li>
+                <a href="/statistics" class="nav-link text-white">
+                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
+                    Статистика
+                </a>
+            </li>
+            <li>
+                <a sec:authorize="hasAuthority('ROLE_ADMIN')" href="/customers" class="nav-link text-white">
+                    <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
+                    Заказчики
+                </a>
+            </li>
+        </ul>
+        <hr>
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
+                <strong>[[${#httpServletRequest.remoteUser}]]</strong>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                <li><a class="dropdown-item" th:href="@{'/profile/username/' + ${#authentication.principal.username}}">Профиль</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li><form th:action="@{/logout}" method="post">
+                    <input type="submit" class="dropdown-item" value="Выйти"/>
+                </form></li>
+            </ul>
+        </div>
+    </div>
+</div>

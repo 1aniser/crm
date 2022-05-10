@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@Table(name = "orders")
-public class Orders implements Builder{
+@Table(name = "application")
+public class Application{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -16,38 +16,38 @@ public class Orders implements Builder{
     private String description;
     @ManyToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="userid")
-    private User user;
+    private User userApl;
     @Column(name = "datecreated")
     private LocalDateTime datecreated;
-    @Column(name = "dateconfirmed")
-    private LocalDateTime dateconfirmed;
     @Column(name = "status")
     private String status;
-    @Column(name = "price")
-    private Integer price;
 
-    public Orders() {
+    public Application() {
     }
 
-    public Orders(Long id, String subject, String description, User user, LocalDateTime datecreated, LocalDateTime dateconfirmed, String status, Integer price) {
+    public Application(Long id, String subject, String description, User userApl, LocalDateTime date, String status) {
         this.id = id;
         this.subject = subject;
         this.description = description;
-        this.user = user;
-        this.datecreated = datecreated;
-        this.dateconfirmed = dateconfirmed;
+        this.userApl = userApl;
+        this.datecreated = date;
         this.status = status;
-        this.price = price;
     }
 
-    public Orders(String subject, String description, User user, LocalDateTime datecreated, LocalDateTime dateconfirmed, String status, Integer price) {
+    public Application(String subject, String description, User userApl, LocalDateTime datecreated, String status) {
         this.subject = subject;
         this.description = description;
-        this.user = user;
+        this.userApl = userApl;
         this.datecreated = datecreated;
-        this.dateconfirmed = dateconfirmed;
         this.status = status;
-        this.price = price;
+    }
+
+    public User getUserApl() {
+        return userApl;
+    }
+
+    public void setUserApl(User userApl) {
+        this.userApl = userApl;
     }
 
     public Long getId() {
@@ -82,14 +82,6 @@ public class Orders implements Builder{
         this.datecreated = datecreated;
     }
 
-    public LocalDateTime getDateconfirmed() {
-        return dateconfirmed;
-    }
-
-    public void setDateconfirmed(LocalDateTime dateconfirmed) {
-        this.dateconfirmed = dateconfirmed;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -98,33 +90,15 @@ public class Orders implements Builder{
         this.status = status;
     }
 
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     @Override
     public String toString() {
-        return "Orders{" +
+        return "Application{" +
                 "id=" + id +
                 ", subject='" + subject + '\'' +
                 ", description='" + description + '\'' +
+                ", userApl=" + userApl +
                 ", datecreated=" + datecreated +
-                ", dateconfirmed=" + dateconfirmed +
                 ", status='" + status + '\'' +
-                ", price=" + price +
-                ", user=" + user +
                 '}';
     }
 }

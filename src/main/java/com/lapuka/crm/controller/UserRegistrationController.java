@@ -15,6 +15,8 @@ import com.lapuka.crm.model.User;
 import com.lapuka.crm.service.UserService;
 import com.lapuka.crm.dto.UserRegistrationDto;
 
+import java.nio.charset.StandardCharsets;
+
 @Controller
 @RequestMapping("/register")
 public class UserRegistrationController {
@@ -43,6 +45,10 @@ public class UserRegistrationController {
         User emailExisting = userService.findByEmail(userDto.getEmail());
         if (emailExisting != null) {
             result.rejectValue("email", null, "Пользователь с такой почтой уже существует");
+        }
+
+        if (!userDto.getPassword().equals(userDto.getConfirmPassword())){
+            result.rejectValue("confirmPassword", null, "Пароли должны совпадать");
         }
 
         if (result.hasErrors()) {

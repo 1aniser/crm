@@ -18,25 +18,31 @@
 <main>
     <div th:insert="blocks/sidebar :: sidebar"/>
     <div class="container">
-        <div th:each="el : ${ordersAtr}" class="col w-70 m-3">
+        <div th:each="el : ${applicationAtr}" class="col w-70 m-3">
             <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
                 <div class="col p-4 d-flex flex-column position-static">
-                    <strong th:text="'Заказ пользователя ' + ${el.user.getUsername()}" class="d-inline-block mb-2 text-primary"></strong>
+                    <strong th:text="'Заявка пользователя ' + ${el.userApl.getUsername()}" class="d-inline-block mb-2 text-primary"></strong>
                     <h1 th:text="${el.subject}" class="mb-0"/><br>
                     <h4 th:text="${el.description}" class="card-text mb-auto"/><br>
-                    <p th:text="'Дата создания заказа: ' + ${el.datecreated}" class="card-text mb-auto"/>
-                    <p th:text="'Дата начала выполнения заказа: ' + ${el.dateconfirmed}" class="card-text mb-auto"/>
-                    <p th:text="'Статус заказа: ' + ${el.status}" class="card-text mb-auto"/>
-                    <p th:text="'Цена заказа: ' + ${el.price} + ' руб.'" class="card-text mb-auto"/><br>
+                    <p th:text="'Дата создания заявки: ' + ${el.datecreated}" class="card-text mb-auto"/>
+                    <p th:text="'Статус заявки: ' + ${el.status}" class="card-text mb-auto"/><br>
                     <div class="container btn-group my-1">
-                        <form class="btn btn-success col-1" sec:authorize="hasAuthority('ROLE_ADMIN')" th:if="${el.status == 'На выполнении'}" th:action="'/orders/' + ${el.id} + '/complete'" method="post">
-                            <button type="submit" class="btn btn-success">Заказ выполнен</button>
-                        </form>
-                        <a sec:authorize="hasAuthority('ROLE_ADMIN')" th:href="'/orders/' + ${el.id} + '/edit'" class="btn btn-warning col-1">Редактировать</a>
-                        <form class="btn btn-danger col-1" sec:authorize="hasAuthority('ROLE_ADMIN')" th:action="'/orders/' + ${el.id} + '/delete'" method="post">
+                        <a sec:authorize="hasAuthority('ROLE_USER')" th:href="'/application/' + ${el.id} + '/edit'" class="btn btn-warning col-1">Редактировать</a>
+                        <form class="btn btn-danger col-1" sec:authorize="hasAuthority('ROLE_USER')" th:action="'/application/' + ${el.id} + '/delete'" method="post">
                             <button type="submit" class="btn btn-danger">Удалить</button>
                         </form>
                     </div>
+                    <form sec:authorize="hasAuthority('ROLE_ADMIN')" th:if="${el.status == 'Новая'}" th:action="'/application/' + ${el.id} + '/execute'" method="post">
+                        <div class="input-group mb-3">
+                            <input type="text" required name="price" placeholder="Введите стоимость заказа" class="form-control"><br>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-success">Отправить на выполнение</button>
+                            </div>
+                        </div>
+                    </form>
+                    <form class="btn btn-danger" sec:authorize="hasAuthority('ROLE_ADMIN')" th:if="${el.status == 'Новая'}" th:action="'/application/' + ${el.id} + '/reject'" method="post">
+                        <button type="submit" class="btn btn-danger">Отказать</button>
+                    </form>
                 </div>
             </div>
         </div>

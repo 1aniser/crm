@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>com.lapuka.crm</OriginalElement>
+  <nodes>
+    <node x="766.0" y="342.0">com.lapuka.crm.service.UserService</node>
+    <node x="0.0" y="0.0">com.lapuka.crm.model.User</node>
+    <node x="432.0" y="618.0">com.lapuka.crm.controller.CustomersController</node>
+    <node x="697.0" y="422.0">com.lapuka.crm.service.UserServiceImpl</node>
+    <node x="41.0" y="618.0">com.lapuka.crm.service.OrderService</node>
+    <node x="0.0" y="342.0">com.lapuka.crm.model.Application</node>
+    <node x="438.0" y="0.0">com.lapuka.crm.model.Orders</node>
+    <node x="765.0" y="618.0">com.lapuka.crm.controller.ProfileController</node>
+    <node x="229.0" y="962.0">com.lapuka.crm.repository.ApplicationRepository</node>
+    <node x="849.0" y="819.0">com.lapuka.crm.controller.UserRegistrationController</node>
+    <node x="490.0" y="962.0">com.lapuka.crm.CrmApplicationTests</node>
+    <node x="333.0" y="819.0">com.lapuka.crm.controller.OrdersController</node>
+    <node x="948.0" y="962.0">com.lapuka.crm.CrmApplication</node>
+    <node x="735.0" y="962.0">com.lapuka.crm.repository.OrderRepository</node>
+    <node x="0.0" y="962.0">com.lapuka.crm.config.WebSecurityConfig</node>
+    <node x="604.0" y="819.0">com.lapuka.crm.constraint.FieldMatchValidator</node>
+    <node x="850.0" y="80.0">com.lapuka.crm.dto.UserRegistrationDto</node>
+    <node x="0.0" y="1061.0">com.lapuka.crm.repository.UserRepository</node>
+    <node x="205.0" y="1061.0">com.lapuka.crm.constraint.FieldMatch.List</node>
+    <node x="0.0" y="698.0">com.lapuka.crm.service.OrderServiceImpl</node>
+    <node x="271.0" y="618.0">com.lapuka.crm.model.Role</node>
+    <node x="364.0" y="422.0">com.lapuka.crm.service.ApplicationServiceImpl</node>
+    <node x="886.0" y="0.0">com.lapuka.crm.constraint.FieldMatch</node>
+    <node x="412.0" y="342.0">com.lapuka.crm.service.ApplicationService</node>
+    <node x="0.0" y="819.0">com.lapuka.crm.controller.MainController</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.lapuka.crm.service.ApplicationServiceImpl" target="com.lapuka.crm.service.ApplicationService">
+      <point x="0.0" y="-38.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.lapuka.crm.service.UserServiceImpl" target="com.lapuka.crm.service.UserService">
+      <point x="0.0" y="-38.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.lapuka.crm.dto.UserRegistrationDto" target="com.lapuka.crm.constraint.FieldMatch">
+      <point x="0.0" y="-93.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+    <edge source="com.lapuka.crm.service.OrderServiceImpl" target="com.lapuka.crm.service.OrderService">
+      <point x="0.0" y="-38.0" />
+      <point x="0.0" y="15.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.8" x="633.125" y="393.75" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Constructors</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

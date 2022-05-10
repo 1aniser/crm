@@ -20,6 +20,12 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
+    @OneToMany(mappedBy = "userApl")
+    private Collection<Application> applications;
+
+    @OneToMany(mappedBy = "user")
+    private Collection<Orders> orders;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",

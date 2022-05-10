@@ -1,9 +1,8 @@
 package com.lapuka.crm.service;
 
-import com.lapuka.crm.model.Orders;
+import com.lapuka.crm.model.Application;
 import com.lapuka.crm.model.User;
 import com.lapuka.crm.repository.ApplicationRepository;
-import com.lapuka.crm.repository.OrderRepository;
 import com.lapuka.crm.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,43 +18,47 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class OrderServiceImpl implements OrderService{
+public class ApplicationServiceImpl implements ApplicationService {
     @Autowired
-    private OrderRepository orderRepository;
+    private ApplicationRepository applicationRepository;
 
     @Autowired
     private UserRepository userRepository;
 
     @Override
-    public List<Orders> getAllOrders() {
-        return null;
+    public List<Application> getAllApplications() {
+        return applicationRepository.findAll();
     }
 
     @Override
-    public Page<Orders> findPaginated(String keyword, int pageNo, int pageSize, String sortField, String sortDirection) {
+    public Page<Application> findPaginated(String keyword, int pageNo, int pageSize, String sortField, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(auth.getName());
         if(auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
             if (keyword != null) {
-                return orderRepository.findBySubjectContaining(keyword, pageable);
+                return applicationRepository.findBySubjectContaining(keyword, pageable);
             }
-            return this.orderRepository.findAll(pageable);
+            return this.applicationRepository.findAll(pageable);
         }
         else {
             if (keyword != null) {
-                return orderRepository.findBySubjectContainingAndUser(keyword, user, pageable);
+                return applicationRepository.findBySubjectContainingAndUserApl(keyword, findUserByName(auth.getName()), pageable);
             }
-            return this.orderRepository.findByUserLike(user, pageable);
+            return this.applicationRepository.findByUserAplLike(findUserByName(auth.getName()), pageable);
         }
     }
 
     @Override
-    public ArrayList<Orders> findUserOrders(Long id) {
+    public ArrayList<Application> findUserApplications(Long id) {
         Optional<User> userOptional = userRepository.findById(id);
         User user = userOptional.get();
-        return this.orderRepository.findByUserLike(user);
+        return this.applicationRepository.findByUserAplLike(user);
+    }
+
+    @Override
+    public User findUserByName(String name) {
+        return userRepository.findByUsername(name);
     }
 }

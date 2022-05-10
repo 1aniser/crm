@@ -1,19 +1,16 @@
 package com.lapuka.crm.controller;
 
-import com.lapuka.crm.model.Orders;
 import com.lapuka.crm.model.User;
+import com.lapuka.crm.repository.ApplicationRepository;
 import com.lapuka.crm.repository.UserRepository;
+import com.lapuka.crm.service.ApplicationServiceImpl;
 import com.lapuka.crm.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.repository.query.Param;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -22,7 +19,12 @@ public class CustomersController {
     private UserRepository userRepository;
 
     @Autowired
+    private ApplicationRepository applicationRepository;
+    @Autowired
     private UserServiceImpl userService;
+
+    @Autowired
+    private ApplicationServiceImpl orderService;
 
     @GetMapping("/customers")
     public String customers(Model model) {

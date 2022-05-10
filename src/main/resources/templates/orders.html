@@ -23,13 +23,13 @@
         <hr>
         <ul class="nav nav-pills flex-column mb-auto">
             <li class="nav-item">
-                <a href="/" class="nav-link active" aria-current="page">
+                <a href="/" class="nav-link text-white">
                     <svg class="bi me-2" width="16" height="16"><use xlink:href="#collection"></use></svg>
                     Заявки
                 </a>
             </li>
             <li>
-                <a href="/orders" class="nav-link text-white">
+                <a href="/orders" class="nav-link active" aria-current="page">
                     <svg class="bi me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
                     Заказы
                 </a>
@@ -63,7 +63,7 @@
         </div>
     </div>
     <div style="width: 100%;">
-        <form th:action="@{/search}" method="get" class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap shadow" style="height: 10vh;">
+        <form th:action="@{/searchOrders}" method="get" class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap shadow" style="height: 10vh;">
             <input type="text" class="form-control form-control-dark w-100" name="keyword" th:value="${keyword}" aria-label="Search" placeholder="Поиск">
             <div class="navbar-nav">
                 <div class="nav-item text-nowrap">
@@ -75,52 +75,55 @@
                     <a href="/" class="btn btn-primary m-3">Очистить</a>
                 </div>
             </div>
-            <div sec:authorize="hasAuthority('ROLE_USER')" class="navbar-nav">
-                <div class="nav-item text-nowrap">
-                    <a class="btn btn-primary m-3" href="/addApplication">Добавить заявку</a>
-                </div>
-            </div>
         </form>
         <div class="container" style="height: 90vh;">
             <div class="container btn-group my-3" role="group">
                 <th>
-                    <a type="button" class="border border-white btn btn-primary col-1" th:href="@{'/home/page/' + ${currentPage} + '?sortField=id&sortDir=' + ${reverseSortDir}}">ID</a>
+                    <a type="button" class="border border-white btn btn-primary col-1" th:href="@{'/orders/page/' + ${currentPage} + '?sortField=id&sortDir=' + ${reverseSortDir}}">ID</a>
                 </th>
                 <th>
-                    <a type="button" class="border border-white btn btn-primary col-4" th:href="@{'/home/page/' + ${currentPage} + '?sortField=subject&sortDir=' + ${reverseSortDir}}">Тема</a>
+                    <a type="button" class="border border-white btn btn-primary col-4" th:href="@{'/orders/page/' + ${currentPage} + '?sortField=subject&sortDir=' + ${reverseSortDir}}">Тема</a>
                 </th>
                 <th>
-                    <a type="button" class="border border-white btn btn-primary col-3" th:href="@{'/home/page/' + ${currentPage} + '?sortField=user&sortDir=' + ${reverseSortDir}}">Заказчик</a>
+                    <a type="button" class="border border-white btn btn-primary col-3" th:href="@{'/orders/page/' + ${currentPage} + '?sortField=userid&sortDir=' + ${reverseSortDir}}">Заказчик</a>
                 </th>
                 <th>
-                    <a type="button" class="border border-white btn btn-primary col-4" th:href="@{'/home/page/' + ${currentPage} + '?sortField=datecreated&sortDir=' + ${reverseSortDir}}">Дата создания</a>
+                    <a type="button" class="border border-white btn btn-primary col-4" th:href="@{'/orders/page/' + ${currentPage} + '?sortField=datecreated&sortDir=' + ${reverseSortDir}}">Дата создания</a>
                 </th>
                 <th>
-                    <a type="button" class="border border-white btn btn-primary col-2" th:href="@{'/home/page/' + ${currentPage} + '?sortField=status&sortDir=' + ${reverseSortDir}}">Статус заявки</a>
+                    <a type="button" class="border border-white btn btn-primary col-4" th:href="@{'/orders/page/' + ${currentPage} + '?sortField=dateconfirmed&sortDir=' + ${reverseSortDir}}">Дата подтверждения</a>
+                </th>
+                <th>
+                    <a type="button" class="border border-white btn btn-primary col-3" th:href="@{'/orders/page/' + ${currentPage} + '?sortField=status&sortDir=' + ${reverseSortDir}}">Статус</a>
+                </th>
+                <th>
+                    <a type="button" class="border border-white btn btn-primary col-2" th:href="@{'/orders/page/' + ${currentPage} + '?sortField=price&sortDir=' + ${reverseSortDir}}">Цена</a>
                 </th>
                 <a class="border border-white btn btn-primary col-2"></a>
             </div>
-            <div th:each="el : ${listApplications}" class="container btn-group my-1" role="group">
+            <div th:each="el : ${listOrders}" class="container btn-group my-1" role="group">
                 <button type="button" class="border border-secondary btn btn-light col-1" th:text="${el.id}"></button>
                 <button type="button" class="border border-secondary btn btn-light col-4" th:text="${el.subject}"></button>
-                <button type="button" class="border border-secondary btn btn-light col-3" th:text="${el.userApl.getUsername()}"></button>
+                <button type="button" class="border border-secondary btn btn-light col-3" th:text="${el.user.getUsername()}"></button>
                 <button type="button" class="border border-secondary btn btn-light col-4" th:text="${el.datecreated}"></button>
-                <button type="button" class="border border-secondary btn btn-light col-2" th:text="${el.status}"></button>
-                <a th:href="'/application/' + ${el.id}" class="border border-secondary btn btn-light col-2">Подробнее</a>
+                <button type="button" class="border border-secondary btn btn-light col-4" th:text="${el.dateconfirmed}"></button>
+                <button type="button" class="border border-secondary btn btn-light col-3" th:text="${el.status}"></button>
+                <button type="button" class="border border-secondary btn btn-light col-2" th:text="${el.price}"></button>
+                <a th:href="'/orders/' + ${el.id}" class="border border-secondary btn btn-light col-2">Подробнее</a>
             </div>
             <div th:if="${totalPages > 1}" class="container btn-group d-flex justify-content-center my-2" style="width: 50%;" role="group" aria-label="c">
-                <a th:if="${currentPage != 1}" th:href="@{'/home/page/' + ${1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-4">Первая</a>
+                <a th:if="${currentPage != 1}" th:href="@{'/orders/page/' + ${1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-4">Первая</a>
                 <span th:unless="${currentPage != 1}"class="border border-secondary btn btn-light col-4">Первая</span>
-                <a th:if="${currentPage > 1}" th:href="@{'/home/page/' + ${currentPage-1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-4">Предыдущая</a>
+                <a th:if="${currentPage > 1}" th:href="@{'/orders/page/' + ${currentPage-1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-4">Предыдущая</a>
                 <span th:unless="${currentPage > 1}"class="border border-secondary btn btn-light col-4">Предыдущая</span>
-                <a th:if="${currentPage > 2}" th:href="@{'/home/page/' + ${currentPage-2}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-1">[[${currentPage - 2}]]</a>
-                <a th:if="${currentPage > 1}" th:href="@{'/home/page/' + ${currentPage-1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-1">[[${currentPage - 1}]]</a>
+                <a th:if="${currentPage > 2}" th:href="@{'/orders/page/' + ${currentPage-2}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-1">[[${currentPage - 2}]]</a>
+                <a th:if="${currentPage > 1}" th:href="@{'/orders/page/' + ${currentPage-1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-1">[[${currentPage - 1}]]</a>
                 <span class="border border-primary btn btn-primary col-1">[[${currentPage}]]</span>
-                <a th:if="${currentPage < totalPages}" th:href="@{'/home/page/' + ${currentPage+1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-1">[[${currentPage + 1}]]</a>
-                <a th:if="${currentPage < totalPages-1}" th:href="@{'/home/page/' + ${currentPage+2}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-1">[[${currentPage + 2}]]</a>
-                <a th:if="${currentPage < totalPages}" th:href="@{'/home/page/' + ${currentPage+1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-4">Следующая</a>
+                <a th:if="${currentPage < totalPages}" th:href="@{'/orders/page/' + ${currentPage+1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-1">[[${currentPage + 1}]]</a>
+                <a th:if="${currentPage < totalPages-1}" th:href="@{'/orders/page/' + ${currentPage+2}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-1">[[${currentPage + 2}]]</a>
+                <a th:if="${currentPage < totalPages}" th:href="@{'/orders/page/' + ${currentPage+1}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-4">Следующая</a>
                 <span th:unless="${currentPage < totalPages}"class="border border-secondary btn btn-light col-4">Следующая</span>
-                <a th:if="${currentPage < totalPages}" th:href="@{'/home/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-4">Последняя</a>
+                <a th:if="${currentPage < totalPages}" th:href="@{'/orders/page/' + ${totalPages}+ '?sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}" class="border border-secondary btn btn-light col-4">Последняя</a>
                 <span th:unless="${currentPage < totalPages}"class="border border-secondary btn btn-light col-4">Последняя</span>
             </div>
         </div>

@@ -18,11 +18,12 @@
 <main>
     <div th:insert="blocks/sidebar :: sidebar"/>
     <div class="container mt-5">
-        <h1>Редактирование заказа</h1>
-        <div th:each="el : ${ordersAtr}">
+        <h1>Редактирование данных профиля</h1>
+        <div th:each="el : ${user}">
             <form method="post">
-                <input type="text" required th:value="${el.subject}" name="subject" placeholder="Введите тему заказа" class="form-control"><br>
-                <textarea required name="description" placeholder="Введите описание заказа" class="form-control" th:text="${el.description}"/><br>
+                <input type="text" required th:value="${el.fio}" name="fio" placeholder="Введите ФИО" class="form-control"><br>
+                <input type="text" required th:value="${el.email}" name="email" placeholder="Введите почту" class="form-control"><br>
+                <input type="text" required th:value="${el.phone}" name="phone" placeholder="Введите телефон" class="form-control"><br>
                 <button type="submit" class="btn btn-success">Обновить</button>
             </form>
         </div>
