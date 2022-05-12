@@ -2,8 +2,10 @@ package com.lapuka.crm.service;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
+import com.lapuka.crm.model.Orders;
 import org.springframework.data.domain.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,11 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Override
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
     public User findByUsername(String username) {
         return userRepository.findByUsername(username);
