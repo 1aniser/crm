@@ -3,14 +3,18 @@ package com.lapuka.crm.controller;
 import com.lapuka.crm.model.Application;
 import com.lapuka.crm.model.Orders;
 import com.lapuka.crm.model.SingletonStatus;
+import com.lapuka.crm.model.User;
 import com.lapuka.crm.repository.ApplicationRepository;
 import com.lapuka.crm.repository.OrderRepository;
+import com.lapuka.crm.repository.UserRepository;
 import com.lapuka.crm.service.ApplicationServiceImpl;
 import com.lapuka.crm.service.OrderServiceImpl;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +30,9 @@ import java.util.Optional;
 public class OrdersController {
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private OrderServiceImpl orderService;
@@ -48,7 +55,9 @@ public class OrdersController {
                                 Model model) {
         int pageSize = 10;
 
-        Page<Orders> page = orderService.findPaginated(keyword, pageNo, pageSize, sortField, sortDir);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        Page<Orders> page = orderService.findPaginated(user, keyword, pageNo, pageSize, sortField, sortDir);
         List<Orders> listOrders = page.getContent();
 
         model.addAttribute("currentPage", pageNo);

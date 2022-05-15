@@ -1,10 +1,14 @@
 package com.lapuka.crm.model;
+import org.springframework.security.config.annotation.web.HttpSecurityBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+
 import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
 @Table(name = "user", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
-public class User {
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,6 +40,14 @@ public class User {
     private Collection < Role > roles;
 
     public User() {}
+
+    public User(String username, String email, String password, String fio, String phone) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.fio = fio;
+        this.phone = phone;
+    }
 
     public User(Long id, String username, String email, String password, String fio, String phone) {
         this.id = id;

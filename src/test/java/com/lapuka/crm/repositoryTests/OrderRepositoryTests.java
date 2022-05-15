@@ -1,21 +1,21 @@
 package com.lapuka.crm.repositoryTests;
 
-import com.lapuka.crm.model.Application;
 import com.lapuka.crm.model.Orders;
 import com.lapuka.crm.model.User;
-import com.lapuka.crm.repository.ApplicationRepository;
 import com.lapuka.crm.repository.OrderRepository;
+import org.junit.Assert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Optional;
-
 import static org.springframework.test.util.AssertionErrors.assertTrue;
 
 @SpringBootTest
@@ -23,36 +23,60 @@ public class OrderRepositoryTests {
     @Autowired
     private OrderRepository orderRepository;
 
-    private List<Orders> ordersList;
-
     private Orders order;
     private User user;
 
+    String sortDirection = "asc";
+    Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by("id").ascending() :
+            Sort.by("id").descending();
+    Pageable pageable = PageRequest.of(0, 10, sort);
+
     @BeforeEach
     public void setup(){
-        ordersList = new ArrayList<Orders>();
-
-        user = new User(1L, "пользователь", "почта@gmail.com", "пароль", "фио", "1234567");
-        Orders order1 = new Orders(1L, "тема", "описание", user, LocalDateTime.now(), LocalDateTime.now(), "Новая", 123);
-
-        ordersList.add(order1);
+        user = new User(12L, "mark", "mark@mail.ru", "123", "Романов Марк Тимофеевич", "1119992");
+        order = new Orders(1L, "тема", "описание", user, LocalDateTime.now(), LocalDateTime.now(), "Готов", 123);
     }
 
     @Test
     public void testSave(){
-        for (Iterator iterator = ordersList.iterator(); iterator.hasNext();) {
-            Orders order = (Orders) iterator.next();
+        order = orderRepository.save(order);
+        Assert.assertNotNull(order);
+    }
 
-            orderRepository.save(order);
 
-            assertTrue("", order.getId() > 0);
-        }
+    @Test
+    public void testFindBySubjectContaining(){
+        Page<Orders> ordersPage = orderRepository.findBySubjectContaining("тема", pageable);
+        Assert.assertFalse(ordersPage.isEmpty());
+    }
+
+    @Test
+    public void testFindBySubjectContainingAndUserApl(){
+        Page<Orders> ordersPage = orderRepository.findBySubjectContainingAndUser("тема", user, pageable);
+        Assert.assertFalse(ordersPage.isEmpty());
+    }
+
+    @Test
+    public void testFindByUserLike(){
+        Page<Orders> ordersPage = orderRepository.findByUserLike(user, pageable);
+        Assert.assertFalse(ordersPage.isEmpty());
+    }
+
+    @Test
+    public void testFindByUserLikeList(){
+        ArrayList<Orders> ordersList = orderRepository.findByUserLike(user);
+        Assert.assertFalse(ordersList.isEmpty());
+    }
+
+    @Test
+    public void testFindByStatusLike(){
+        ArrayList<Orders> ordersList = orderRepository.findByStatusLike("Готов");
+        Assert.assertFalse(ordersList.isEmpty());
     }
 
     @Test
     public void testFindAll(){
         List<Orders> order = orderRepository.findAll();
-
         assertTrue("", order.size() > 0);
     }
 }

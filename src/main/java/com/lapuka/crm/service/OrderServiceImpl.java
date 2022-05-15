@@ -32,23 +32,30 @@ public class OrderServiceImpl implements OrderService{
     }
 
     @Override
-    public Page<Orders> findPaginated(String keyword, int pageNo, int pageSize, String sortField, String sortDirection) {
+    public Page<Orders> findPaginated(User user, String keyword, int pageNo, int pageSize, String sortField, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUsername(auth.getName());
-        if(auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
+        if(SecurityContextHolder.getContext().getAuthentication() != null){
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if(auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
+                if (keyword != null) {
+                    return orderRepository.findBySubjectContaining(keyword, pageable);
+                }
+                return this.orderRepository.findAll(pageable);
+            }
+            else {
+                if (keyword != null) {
+                    return orderRepository.findBySubjectContainingAndUser(keyword, user, pageable);
+                }
+                return this.orderRepository.findByUserLike(user, pageable);
+            }
+        }
+        else {
             if (keyword != null) {
                 return orderRepository.findBySubjectContaining(keyword, pageable);
             }
             return this.orderRepository.findAll(pageable);
-        }
-        else {
-            if (keyword != null) {
-                return orderRepository.findBySubjectContainingAndUser(keyword, user, pageable);
-            }
-            return this.orderRepository.findByUserLike(user, pageable);
         }
     }
 

@@ -14,8 +14,8 @@ public class applicationTests {
     private User user;
 
     @BeforeEach
-    void setUp()throws Exception{
-        user = new User(1L, "пользователь", "почта@gmail.com", "пароль", "фио", "1234567");
+    void setUp(){
+        user = new User(12L, "mark", "mark@mail.ru", "123", "Романов Марк Тимофеевич", "1119992");
         application = new Application(1L, "тема", "описание", user, LocalDateTime.now(), "Новая");
     }
 
@@ -24,6 +24,7 @@ public class applicationTests {
         if(!application.getId().equals(1L)) throw new IllegalArgumentException();
         if(!application.getSubject().equals("тема")) throw new IllegalArgumentException();
         if(!application.getDescription().equals("описание")) throw new IllegalArgumentException();
+        if(!application.getUserApl().equals(user)) throw new IllegalArgumentException();
         if(!application.getStatus().equals("Новая")) throw new IllegalArgumentException();
     }
 }

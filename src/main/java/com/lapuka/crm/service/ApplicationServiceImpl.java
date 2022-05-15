@@ -31,22 +31,30 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public Page<Application> findPaginated(String keyword, int pageNo, int pageSize, String sortField, String sortDirection) {
+    public Page<Application> findPaginated(User user, String keyword, int pageNo, int pageSize, String sortField, String sortDirection) {
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if(auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
+        if(SecurityContextHolder.getContext().getAuthentication() != null){
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if(auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))){
+                if (keyword != null) {
+                    return applicationRepository.findBySubjectContaining(keyword, pageable);
+                }
+                return this.applicationRepository.findAll(pageable);
+            }
+            else {
+                if (keyword != null) {
+                    return applicationRepository.findBySubjectContainingAndUserApl(keyword, user, pageable);
+                }
+                return this.applicationRepository.findByUserAplLike(user, pageable);
+            }
+        }
+        else {
             if (keyword != null) {
                 return applicationRepository.findBySubjectContaining(keyword, pageable);
             }
             return this.applicationRepository.findAll(pageable);
-        }
-        else {
-            if (keyword != null) {
-                return applicationRepository.findBySubjectContainingAndUserApl(keyword, findUserByName(auth.getName()), pageable);
-            }
-            return this.applicationRepository.findByUserAplLike(findUserByName(auth.getName()), pageable);
         }
     }
 

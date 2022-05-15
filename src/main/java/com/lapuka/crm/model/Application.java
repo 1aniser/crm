@@ -14,7 +14,7 @@ public class Application{
     private String subject;
     @Column(name = "description")
     private String description;
-    @ManyToOne(fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="userid")
     private User userApl;
     @Column(name = "datecreated")

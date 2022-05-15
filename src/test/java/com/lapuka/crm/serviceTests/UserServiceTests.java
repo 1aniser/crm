@@ -24,9 +24,6 @@ public class UserServiceTests {
     @Autowired
     UserServiceImpl userService;
 
-    @MockBean
-    UserRepository userRepositoryMock;
-
     private User user;
 
     @BeforeEach
@@ -36,8 +33,6 @@ public class UserServiceTests {
 
     @Test
     public void getAllUsersTest() throws IllegalArgumentException{
-        List<User> usersFromMock = new ArrayList<>();
-        Mockito.when(userRepositoryMock.findAll()).thenReturn(usersFromMock);
         List<User> users = userService.getAllUsers();
         if(!users.equals(users)) throw new IllegalArgumentException();
     }

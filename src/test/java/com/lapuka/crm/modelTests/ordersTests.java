@@ -14,13 +14,13 @@ public class ordersTests {
     private User user;
 
     @BeforeEach
-    void setUp()throws Exception{
-        user = new User(1L, "пользователь", "почта@gmail.com", "пароль", "фио", "1234567");
+    void setUp(){
+        user = new User(12L, "mark", "mark@mail.ru", "123", "Романов Марк Тимофеевич", "1119992");
         order = new Orders(1L, "тема", "описание", user, LocalDateTime.now(), LocalDateTime.now(), "Новая", 123);
     }
 
     @Test
-    void testApplication()throws IllegalArgumentException{
+    void testOrders()throws IllegalArgumentException{
         if(!order.getId().equals(1L)) throw new IllegalArgumentException();
         if(!order.getSubject().equals("тема")) throw new IllegalArgumentException();
         if(!order.getDescription().equals("описание")) throw new IllegalArgumentException();

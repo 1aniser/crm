@@ -3,14 +3,18 @@ package com.lapuka.crm.controller;
 import com.lapuka.crm.model.Application;
 import com.lapuka.crm.model.Orders;
 import com.lapuka.crm.model.SingletonStatus;
+import com.lapuka.crm.model.User;
 import com.lapuka.crm.repository.ApplicationRepository;
 import com.lapuka.crm.repository.OrderRepository;
+import com.lapuka.crm.repository.UserRepository;
 import com.lapuka.crm.service.ApplicationServiceImpl;
 import org.hibernate.type.LocalDateTimeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +32,9 @@ import java.util.Optional;
 public class MainController {
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -58,7 +65,9 @@ public class MainController {
                                 Model model) {
         int pageSize = 10;
 
-        Page<Application> page = applicationService.findPaginated(keyword, pageNo, pageSize, sortField, sortDir);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userRepository.findByUsername(auth.getName());
+        Page<Application> page = applicationService.findPaginated(user, keyword, pageNo, pageSize, sortField, sortDir);
         List<Application> listApplications = page.getContent();
 
         model.addAttribute("currentPage", pageNo);

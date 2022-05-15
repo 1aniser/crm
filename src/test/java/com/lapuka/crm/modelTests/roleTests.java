@@ -10,12 +10,12 @@ public class roleTests {
     private Role role;
 
     @BeforeEach
-    void setUp()throws Exception{
+    void setUp(){
         role = new Role("ROLE_USER");
     }
 
     @Test
-    void testApplication()throws IllegalArgumentException{
+    void testRole()throws IllegalArgumentException{
         if(!role.getName().equals("ROLE_USER")) throw new IllegalArgumentException();
     }
 }

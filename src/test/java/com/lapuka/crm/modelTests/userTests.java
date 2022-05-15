@@ -10,7 +10,7 @@ public class userTests {
     private User user;
 
     @BeforeEach
-    void setUp()throws Exception{
+    void setUp(){
         user = new User(1L, "пользователь", "почта@gmail.com", "пароль", "фио", "1234567");
     }
 
