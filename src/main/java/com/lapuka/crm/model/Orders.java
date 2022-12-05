@@ -10,8 +10,7 @@ public class Orders implements Builder{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "subject"
-    )
+    @Column(name = "subject")
     private String subject;
     @Column(name = "description")
     private String description;

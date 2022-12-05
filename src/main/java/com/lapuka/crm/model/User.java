@@ -30,6 +30,12 @@ public class User{
     @OneToMany(mappedBy = "user")
     private Collection<Orders> orders;
 
+    @OneToMany(mappedBy = "userchat")
+    private Collection<Chat> chats;
+
+    @OneToMany(mappedBy = "sender")
+    private Collection<Chatmessage> messages;
+
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_roles",

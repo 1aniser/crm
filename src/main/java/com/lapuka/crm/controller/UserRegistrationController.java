@@ -2,6 +2,7 @@ package com.lapuka.crm.controller;
 
 import javax.validation.Valid;
 
+import com.lapuka.crm.repository.ChatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,8 @@ public class UserRegistrationController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private ChatRepository chatRepository;
     @ModelAttribute("user")
     public UserRegistrationDto userRegistrationDto() {
         return new UserRegistrationDto();
