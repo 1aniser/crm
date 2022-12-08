@@ -9,14 +9,21 @@ import com.lapuka.crm.repository.OrderRepository;
 import com.lapuka.crm.repository.UserRepository;
 import com.lapuka.crm.service.ApplicationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLConnection;
+import java.nio.charset.StandardCharsets;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -104,6 +111,101 @@ public class MainController {
         model.addAttribute("completedOrders", completedOrders);
         model.addAttribute("complOrdersPercent", complOrdersPercent);
         return "statistics";
+    }
+
+    @PostMapping("/statistics/report")
+    public String applicationExecute(HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
+        long allApplications = applicationRepository.count();
+        long newAppl = applicationRepository.findByStatusLike(SingletonStatus.NEW.getStatus()).stream().count();
+        long rejectedAppl = applicationRepository.findByStatusLike(SingletonStatus.COMPLETING.getStatus()).stream().count();
+        long allOrders = orderRepository.count();
+        long inprogressOrders = orderRepository.findByStatusLike(SingletonStatus.COMPLETING.getStatus()).stream().count();
+        long completedOrders = orderRepository.findByStatusLike(SingletonStatus.COMPLETED.getStatus()).stream().count();
+        int newApplPercent = (int) (((float) newAppl/(float)allApplications)*100);
+        int complOrdersPercent = (int) (((float) completedOrders/(float)allOrders)*100);
+        String fileName = "Отчет на момент " + LocalDateTime.now().getDayOfMonth() + '.' + LocalDateTime.now().getMonthValue() + '.' + LocalDateTime.now().getYear() + ".txt";
+        try(FileWriter writer = new FileWriter(fileName, StandardCharsets.UTF_8))
+        {
+            String text = "  Отчет на момент " + LocalDateTime.now().getDayOfMonth() + '.' + LocalDateTime.now().getMonthValue() + '.' + LocalDateTime.now().getYear() + '\n';
+            writer.write(text);
+            text = "------------------------------\n";
+            writer.write(text);
+            text = "           Заявки:\n";
+            writer.write(text);
+            text = "Всего заявок: "+ allApplications + '\n';
+            writer.write(text);
+            text = "Новых заявок: "+ newAppl + '\n';
+            writer.write(text);
+            text = "Отказанных заявок: "+ rejectedAppl + '\n';
+            writer.write(text);
+            text = "Процент новых: "+ newApplPercent + "%\n";
+            writer.write(text);
+            text = "------------------------------\n";
+            writer.write(text);
+            text = "           Заказы:\n";
+            writer.write(text);
+            text = "Всего заказов: "+ allOrders + '\n';
+            writer.write(text);
+            text = "Выполняемых заказов: "+ inprogressOrders + '\n';
+            writer.write(text);
+            text = "Выполненных заказов: "+ completedOrders + '\n';
+            writer.write(text);
+            text = "Процент выполненных: "+ complOrdersPercent + "%\n";
+            writer.write(text);
+            text = "------------------------------\n";
+            writer.write(text);
+            File file = new File(fileName);
+            writer.flush();
+        }
+        catch(IOException ex){
+            System.out.println(ex.getMessage());
+        }
+        return "redirect:/statistics";
+    }
+    @RestController
+    @RequestMapping("/download")
+    public class FileDownloadController {
+        private static final String EXTERNAL_FILE_PATH = "C:/fileDownloadExample/";
+        @RequestMapping("/file/{fileName:.+}")
+        public void downloadPDFResource(HttpServletRequest request, HttpServletResponse response,
+                                        @PathVariable("fileName") String fileName) throws IOException {
+
+            File file = new File(EXTERNAL_FILE_PATH + fileName);
+            if (file.exists()) {
+
+                //get the mimetype
+                String mimeType = URLConnection.guessContentTypeFromName(file.getName());
+                if (mimeType == null) {
+                    //unknown mimetype so set the mimetype to application/octet-stream
+                    mimeType = "application/octet-stream";
+                }
+
+                response.setContentType(mimeType);
+
+                /**
+                 * In a regular HTTP response, the Content-Disposition response header is a
+                 * header indicating if the content is expected to be displayed inline in the
+                 * browser, that is, as a Web page or as part of a Web page, or as an
+                 * attachment, that is downloaded and saved locally.
+                 *
+                 */
+
+                /**
+                 * Here we have mentioned it to show inline
+                 */
+                response.setHeader("Content-Disposition", String.format("inline; filename=\"" + file.getName() + "\""));
+
+                //Here we have mentioned it to show as attachment
+                //response.setHeader("Content-Disposition", String.format("attachment; filename=\"" + file.getName() + "\""));
+
+                response.setContentLength((int) file.length());
+
+                InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+
+                FileCopyUtils.copy(inputStream, response.getOutputStream());
+
+            }
+        }
     }
 
     @GetMapping("/addApplication")

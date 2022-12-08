@@ -17,7 +17,7 @@
 <div th:insert="blocks/svgs :: svgs"/>
 <main>
     <div th:insert="blocks/sidebar :: sidebar"/>
-    <div class="container mt-5">
+    <div class="container mt-5" style="position:fixed; top:0; left:292px; bottom:0; right:0px;">
         <h1>Добавление заявки</h1>
         <form action="/addApplication" method="post">
             <input type="text" required name="subject" placeholder="Введите тему заказа" class="form-control nav-item text-nowrap m-3"><br>

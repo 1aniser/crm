@@ -4,6 +4,7 @@ import com.lapuka.crm.model.User;
 import com.lapuka.crm.repository.ApplicationRepository;
 import com.lapuka.crm.repository.UserRepository;
 import com.lapuka.crm.service.ApplicationServiceImpl;
+import com.lapuka.crm.service.OrderServiceImpl;
 import com.lapuka.crm.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.CurrentSecurityContext;
@@ -28,16 +29,18 @@ public class ProfileController {
     @Autowired
     private ApplicationServiceImpl applicationService;
 
+    @Autowired
+    private OrderServiceImpl orderService;
+
     @GetMapping("/profile/{id}")
     public String userDetails(@PathVariable(value = "id") Long id, Model model) {
         if(!userRepository.existsById(id)){
             return "redirect:/";
         }
-        Optional<User> userOptional = userRepository.findById(id);
-        ArrayList<User> res = new ArrayList<>();
-        userOptional.ifPresent(res::add);
-        model.addAttribute("user", res);
+        User user = userRepository.findByIdLike(id);
+        model.addAttribute("user", user);
         model.addAttribute("listApplications", applicationService.findUserApplications(id));
+        model.addAttribute("listOrders", orderService.findUserOrders(id));
         return "profile";
     }
 

@@ -21,7 +21,8 @@
     <div th:each="el : ${user}" class="col w-70 m-3">
       <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
         <div class="col p-4 d-flex flex-column position-static">
-          <strong class="d-inline-block mb-2 text-primary">Пользователь</strong>
+          <strong th:if="${user.roles[0].name == 'ROLE_USER'}" class="d-inline-block mb-2 text-primary">Пользователь</strong>
+          <strong th:if="${user.roles[0].name == 'ROLE_ADMIN'}" class="d-inline-block mb-2 text-danger">Администратор</strong>
           <h3 th:text="${el.username}" class="mb-0"/>
           <div th:text="${el.fio}" class="mb-1 text-muted"/>
           <p th:text="'Почта: ' + ${el.email}" class="card-text mb-auto"/>
@@ -30,17 +31,17 @@
         </div>
       </div>
     </div>
-    <div>
-      <h1 class="mx-3">Заявки пользователя</h1>
-      <div class="container btn-group my-3" role="group">
+    <div th:if="${user.roles[0].name == 'ROLE_USER'}">
+      <h4 class="mx-3" style="position:fixed; top:35vh; left:292px;">Заявки пользователя</h4>
+      <div class="container btn-group my-3" role="group" style="position:fixed; top:37vh; left:292px; width:172vh;">
         <a type="button" class="border border-white btn btn-primary col-1">ID</a>
         <a type="button" class="border border-white btn btn-primary col-4">Тема</a>
         <a type="button" class="border border-white btn btn-primary col-3">Заказчик</a>
-        <a type="button" class="border border-white btn btn-primary col-4">Дата заказа</a>
-        <a type="button" class="border border-white btn btn-primary col-2">Статус заказа</a>
+        <a type="button" class="border border-white btn btn-primary col-4">Дата заявки</a>
+        <a type="button" class="border border-white btn btn-primary col-2">Статус заявки</a>
         <a class="border border-white btn btn-primary col-2">Подробнее</a>
       </div>
-      <div style="overflow:scroll; height:45%;">
+      <div style="position:fixed; overflow-y: scroll; top:45vh; left:292px; bottom:36vh; right:0;">
         <div th:each="el : ${listApplications}" class="container btn-group my-1" role="group" aria-label="b">
           <button type="button" class="border border-secondary btn btn-light col-1" th:text="${el.id}"></button>
           <button type="button" class="border border-secondary btn btn-light col-4" th:text="${el.subject}"></button>
@@ -48,6 +49,29 @@
           <button type="button" class="border border-secondary btn btn-light col-4" th:text="${el.datecreated}"></button>
           <button type="button" class="border border-secondary btn btn-light col-2" th:text="${el.status}"></button>
           <a th:href="'/application/' + ${el.id}" class="border border-secondary btn btn-light col-2">Подробнее</a>
+        </div>
+      </div>
+      <h4 class="mx-3" style="position:fixed; top:67vh; left:292px;">Заказы пользователя</h4>
+      <div class="container btn-group my-3" role="group" style="position:fixed; top:69vh; left:292px; width:172vh;">
+        <a type="button" class="border border-white btn btn-primary col-1">ID</a>
+        <a type="button" class="border border-white btn btn-primary col-4">Тема</a>
+        <a type="button" class="border border-white btn btn-primary col-3">Заказчик</a>
+        <a type="button" class="border border-white btn btn-primary col-4">Дата создания</a>
+        <a type="button" class="border border-white btn btn-primary col-4">Дата подтверждения</a>
+        <a type="button" class="border border-white btn btn-primary col-3">Статус заказа</a>
+        <a type="button" class="border border-white btn btn-primary col-2">Цена</a>
+        <a class="border border-white btn btn-primary col-2">Подробнее</a>
+      </div>
+      <div style="position:fixed; overflow-y: scroll; top:77vh; left:292px; bottom:4vh; right:0;">
+        <div th:each="el : ${listOrders}" class="container btn-group my-1" role="group">
+          <button type="button" class="border border-secondary btn btn-light col-1" th:text="${el.id}"></button>
+          <button type="button" class="border border-secondary btn btn-light col-4" th:text="${el.subject}"></button>
+          <button type="button" class="border border-secondary btn btn-light col-3" th:text="${el.user.getUsername()}"></button>
+          <button type="button" class="border border-secondary btn btn-light col-4" th:text="${el.datecreated}"></button>
+          <button type="button" class="border border-secondary btn btn-light col-4" th:text="${el.dateconfirmed}"></button>
+          <button type="button" class="border border-secondary btn btn-light col-3" th:text="${el.status}"></button>
+          <button type="button" class="border border-secondary btn btn-light col-2" th:text="${el.price}"></button>
+          <a th:href="'/orders/' + ${el.id}" class="border border-secondary btn btn-light col-2">Подробнее</a>
         </div>
       </div>
     </div>

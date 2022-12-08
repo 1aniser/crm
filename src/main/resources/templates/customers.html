@@ -48,7 +48,7 @@
       </li>
       <li>
         <a sec:authorize="hasAuthority('ROLE_USER')" th:href="@{'/chatDetails/username/' + ${#authentication.principal.username}}" class="nav-link text-white">
-          <svg class="bi me-2" width="16" height="16"><use xlink:href="#people-circle"></use></svg>
+          <svg class="bi me-2" width="16" height="16"><use xlink:href="#chat-quote-fill"></use></svg>
           Поддержка
         </a>
       </li>
@@ -102,7 +102,7 @@
         <a class="border border-white btn btn-primary col-2">Сообщения</a>
         <a class="border border-white btn btn-primary col-2">Подробнее</a>
       </div>
-      <div th:each="el : ${listusers}" class="container btn-group my-1" role="group" aria-label="b">
+      <div th:each="el : ${listusers}" th:if="${el.roles[0].name == 'ROLE_USER'}" class="container btn-group my-1" role="group" aria-label="b">
         <button type="button" class="border border-secondary btn btn-light col-1" th:text="${el.id}"></button>
         <button type="button" class="border border-secondary btn btn-light col-3" th:text="${el.username}"></button>
         <button type="button" class="border border-secondary btn btn-light col-4" th:text="${el.fio}"></button>
